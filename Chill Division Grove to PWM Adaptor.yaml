@@ -1,0 +1,36 @@
+# Chill Division Grove to PWM Adaptor
+# Dims an LED grow light through its RJ11/RJ12 dimming port.
+# https://github.com/Chill-Division/Chill-Division-ESPHome
+#
+# How to use it
+#   1. In ESPHome Device Builder, click EDIT on your device.
+#   2. Paste everything below the dashed line at the bottom of its YAML.
+#   3. Check the pin (below), then click SAVE and INSTALL.
+#
+# CHECK THE PIN
+#   The pin below is set for the M5Stack Unit PoE-P4. On its Grove port the
+#   yellow wire (GPIO53) carries the dimming signal. On any other
+#   controller, look up its Grove pins in the table in this repository's
+#   README and change the line to match.
+#
+# Good to know
+#   - "Off" in Home Assistant is the light's lowest dim level, not off. Turn
+#     the light itself off at its power supply or with a relay.
+#   - While the controller starts up or installs an update, the light runs
+#     at full brightness for a few seconds.
+# ---------------------------------------------------------------------------
+
+output:
+  - platform: ledc
+    pin: GPIO53  # Unit PoE-P4, yellow wire. Check this for your controller.
+    id: pwm_output_1
+    frequency: 1000 Hz
+    inverted: true  # the adaptor's transistor flips the signal
+
+light:
+  - platform: monochromatic
+    output: pwm_output_1
+    id: light_1
+    name: "Light 1"
+    gamma_correct: 1.0
+    restore_mode: RESTORE_DEFAULT_OFF

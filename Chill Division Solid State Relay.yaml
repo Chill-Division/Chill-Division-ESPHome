@@ -1,0 +1,32 @@
+# Chill Division Solid State Relay (SSR-Lite)
+# Switches two 230 V loads, "Load 1" and "Load 2", from one Grove port.
+# https://github.com/Chill-Division/Chill-Division-ESPHome
+#
+# How to use it
+#   1. In ESPHome Device Builder, click EDIT on your device.
+#   2. Paste everything below the dashed line at the bottom of its YAML.
+#   3. Check the pins (below), then click SAVE and INSTALL.
+#   4. Rename "Load 1" and "Load 2" to what's plugged into them, keeping the
+#      number, e.g. "Humidifier 1".
+#
+# CHECK THE PINS
+#   The pins below are set for the M5Stack Unit PoE-P4. On its Grove port
+#   the yellow wire (GPIO53) switches Load 1 and the white wire (GPIO54)
+#   switches Load 2. On any other controller, look up its Grove pins in the
+#   table in this repository's README and change both lines to match.
+#
+# Both loads start off whenever the controller restarts, and stay off until
+# Home Assistant (or you) turns them back on.
+# ---------------------------------------------------------------------------
+
+switch:
+  - platform: gpio
+    pin: GPIO53  # Unit PoE-P4, yellow wire. Check this for your controller.
+    id: load_1
+    name: "Load 1"
+    restore_mode: ALWAYS_OFF
+  - platform: gpio
+    pin: GPIO54  # Unit PoE-P4, white wire. Check this for your controller.
+    id: load_2
+    name: "Load 2"
+    restore_mode: ALWAYS_OFF

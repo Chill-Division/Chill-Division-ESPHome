@@ -1,0 +1,40 @@
+# Chill Division XKC-Y26 Level Sensor Adaptor
+# Two XKC-Y26-V non-contact level sensors on one tank, from one Grove port:
+# one near the top (high level) and one near the bottom (low level).
+# https://github.com/Chill-Division/Chill-Division-ESPHome
+#
+# How to use it
+#   1. In ESPHome Device Builder, click EDIT on your device.
+#   2. Paste everything below the dashed line at the bottom of its YAML.
+#   3. Check the pins (below), then click SAVE and INSTALL.
+#
+# CHECK THE PINS
+#   The pins below are set for the M5Stack Unit PoE-P4. On its Grove port
+#   the white wire (GPIO54) is the TOP / HIGH sensor and the yellow wire
+#   (GPIO53) is the BOTTOM / LOW sensor. On any other controller, look up
+#   its Grove pins in the table in this repository's README and change both
+#   lines to match.
+#
+# "Wet" means there's liquid at that sensor. If you've bridged a sensor's
+# REV jumper on the adaptor, set its "inverted" line below to true.
+# ---------------------------------------------------------------------------
+
+binary_sensor:
+  - platform: gpio
+    id: high_level
+    name: "High level"  # top sensor, the adaptor's HIGH socket
+    pin:
+      number: GPIO54  # Unit PoE-P4, white wire. Check this for your controller.
+      inverted: false  # true if the HIGH sensor's REV jumper is bridged
+    device_class: moisture
+    filters:
+      - delayed_on_off: 2s  # ride out sloshing and ripples
+  - platform: gpio
+    id: low_level
+    name: "Low level"  # bottom sensor, the adaptor's LOW socket
+    pin:
+      number: GPIO53  # Unit PoE-P4, yellow wire. Check this for your controller.
+      inverted: false  # true if the LOW sensor's REV jumper is bridged
+    device_class: moisture
+    filters:
+      - delayed_on_off: 2s

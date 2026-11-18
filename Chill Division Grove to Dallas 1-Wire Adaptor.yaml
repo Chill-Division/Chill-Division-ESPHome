@@ -1,0 +1,32 @@
+# Chill Division Grove to Dallas 1-Wire Adaptor
+# Temperature from a DS18B20 probe (water or air) on a Grove port.
+# https://github.com/Chill-Division/Chill-Division-ESPHome
+#
+# WARNING
+#   This adaptor powers the probe from the Grove port's 5V, and pulls the
+#   data line up to 5V too. The PoE-P4's pins (and the PoESP32's) are only
+#   rated to 3.6V. That's outside the controller's rating, so use it knowing
+#   the risk.
+#
+# How to use it
+#   1. In ESPHome Device Builder, click EDIT on your device.
+#   2. Paste everything below the dashed line at the bottom of its YAML.
+#   3. Check the pin (below), then click SAVE and INSTALL.
+#
+# CHECK THE PIN
+#   The pin below is set for the M5Stack Unit PoE-P4. On its Grove port the
+#   yellow wire (GPIO53) carries the probe's data. On any other controller,
+#   look up its Grove pins in the table in this repository's README and
+#   change the line to match.
+# ---------------------------------------------------------------------------
+
+one_wire:
+  - platform: gpio
+    pin: GPIO53  # Unit PoE-P4, yellow wire. Check this for your controller.
+    id: one_wire_1
+
+sensor:
+  - platform: dallas_temp
+    one_wire_id: one_wire_1
+    name: "Water temperature"
+    update_interval: 30s

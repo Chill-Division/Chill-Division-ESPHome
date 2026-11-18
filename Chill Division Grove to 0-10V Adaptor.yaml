@@ -1,0 +1,47 @@
+# Chill Division Grove to 0-10V Adaptor
+# 0-10 V dimming (GP8403) for LED drivers and light bars, from a Grove port.
+# https://github.com/Chill-Division/Chill-Division-ESPHome
+#
+# How to use it
+#   1. In ESPHome Device Builder, click EDIT on your device.
+#   2. Paste everything below the dashed line at the bottom of its YAML.
+#      Your YAML can only have one "i2c:" section. If it already has one,
+#      even one that's commented out with #, delete it first.
+#   3. Check the pins (below), then click SAVE and INSTALL.
+#   4. Rename "Light 1" to what it dims, keeping the number, e.g.
+#      "Undercanopy 1".
+#
+# CHECK THE PINS
+#   sda and scl below are set for the M5Stack Unit PoE-P4. On its Grove
+#   port the yellow wire is GPIO53 (sda) and the white wire is GPIO54 (scl).
+#   On any other controller, look up its Grove pins in the table in this
+#   repository's README and change both lines to match.
+# ---------------------------------------------------------------------------
+
+i2c:
+  sda: GPIO53  # Unit PoE-P4, yellow wire. Check this for your controller.
+  scl: GPIO54  # Unit PoE-P4, white wire. Check this for your controller.
+  scan: true
+  id: bus_1
+
+gp8403:
+  id: dac_1
+  address: 0x58
+  voltage: 10V
+
+output:
+  - platform: gp8403
+    id: output_1
+    gp8403_id: dac_1
+    channel: 1  # VOUT1, the output wired to the RJ12
+    min_power: 0.12  # bars switch on at 1.0 V, so 1 % in Home Assistant is 1.2 V
+    max_power: 1.0
+    zero_means_zero: true  # off is a real 0 V, not the 1.2 V minimum
+
+light:
+  - platform: monochromatic
+    name: "Light 1"
+    id: light_1
+    output: output_1
+    gamma_correct: 1.0
+    restore_mode: RESTORE_DEFAULT_OFF
